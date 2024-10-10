@@ -5,13 +5,13 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.gw.id
   }
   tags = {
-    Name = "routeTable_public"
+    Name = "routeTable_public-${var.environment}"
   }
 }
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = "routeTable_private"
+    Name = "routeTable_private-${var.environment}"
   }
 }
