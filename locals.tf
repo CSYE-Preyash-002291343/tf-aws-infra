@@ -1,3 +1,3 @@
 locals {
-  AZ = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  AZ = slice(data.aws_availability_zones.available.names, 0, min(3, length(data.aws_availability_zones.available.names)))
 }
