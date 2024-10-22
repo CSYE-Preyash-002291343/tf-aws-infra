@@ -9,10 +9,24 @@ resource "aws_instance" "app" {
     volume_size = 25
   }
   disable_api_termination = false
-  tags = {
-    Name = "App-${var.environment}"
-  }
   lifecycle {
     create_before_destroy = true
   }
+
+  #add user data script to create environment variables for rds to pick and connect
+  user_data = <<-EOF
+              #!/bin/bash
+              echo " DB_HOST=${aws_db_instance.postgres.address}" >> /opt/src/webapp/.env
+              echo " DB_USER=${var.DB_USER}" >> /opt/src/webapp/.env
+              echo " DB_PASS=${var.DB_PASS}" >> /opt/src/webapp/.env
+              echo " DB_NAME=${var.DB_NAME}" >> /opt/src/webapp/.env
+
+              #start the app
+              sudo systemctl restart packer-webapp.service
+              EOF
+
+  tags = {
+    Name = "App-${var.environment}"
+  }
+
 }
