@@ -42,3 +42,24 @@ resource "aws_security_group" "app" {
     Name = "SG-${var.environment}"
   }
 }
+
+resource "aws_security_group" "RDS-SG" {
+  name        = "rds-sg-${var.environment}"
+  description = "Allow all inbound traffic"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "PostgreSQL"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "TCP"
+    security_groups = [aws_security_group.app.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
