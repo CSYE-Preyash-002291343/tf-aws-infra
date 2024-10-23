@@ -12,7 +12,7 @@ resource "aws_db_parameter_group" "postgres" {
     value        = "0"
     apply_method = "pending-reboot"
   }
-  
+
   tags = {
     Name = "RDS-ParamGroup-${var.environment}"
   }
