@@ -3,6 +3,7 @@ resource "aws_instance" "app" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public[0].id
   vpc_security_group_ids = [aws_security_group.app.id]
+  iam_instance_profile   = aws_iam_instance_profile.cloudwatch_agent_profile.name
 
   root_block_device {
     volume_type = "gp2"
@@ -23,6 +24,14 @@ resource "aws_instance" "app" {
 
               #start the app
               sudo systemctl restart packer-webapp.service
+
+              # Start CloudWatch Agent
+              echo "Starting Amazon CloudWatch Agent..."
+              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+              -a fetch-config \
+              -m ec2 \
+              -c file:/opt/cloudwatch-config.json \
+              -s
               EOF
 
   tags = {
