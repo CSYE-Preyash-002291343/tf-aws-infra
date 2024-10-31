@@ -40,7 +40,7 @@ resource "aws_iam_policy" "s3_access_policy" {
           "s3:GetBucketLocation",
           "s3:HeadBucket"
         ],
-        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}"  # Bucket-level permissions
+        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}" # Bucket-level permissions
       },
       {
         Effect = "Allow",
@@ -49,7 +49,7 @@ resource "aws_iam_policy" "s3_access_policy" {
           "s3:GetObject",
           "s3:DeleteObject"
         ],
-        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}/*"  # Object-level permissions
+        Resource = "arn:aws:s3:::${aws_s3_bucket.my_bucket.bucket}/*" # Object-level permissions
       }
     ]
   })

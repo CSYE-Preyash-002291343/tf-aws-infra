@@ -74,7 +74,7 @@ variable "domain" {
   type        = string
 }
 
-variable "ARN-dev"{
+variable "ARN-dev" {
   description = "The ARN for the dev user."
   type        = string
 }
