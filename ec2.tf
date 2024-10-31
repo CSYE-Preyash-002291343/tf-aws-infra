@@ -21,6 +21,7 @@ resource "aws_instance" "app" {
               echo " DB_USER=${var.DB_USER}" >> /opt/src/webapp/.env
               echo " DB_PASS=${var.DB_PASS}" >> /opt/src/webapp/.env
               echo " DB_NAME=${var.DB_NAME}" >> /opt/src/webapp/.env
+              echo " BUCKET=${aws_s3_bucket.my_bucket.bucket}" >> /opt/src/webapp/.env
 
               #start the app
               sudo systemctl restart packer-webapp.service
