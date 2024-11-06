@@ -22,7 +22,7 @@ resource "aws_launch_template" "app" {
     }
   }
 
-  user_data = <<-EOF
+  user_data = base64encode(<<-EOF
               #!/bin/bash
               echo "DB_HOST=${aws_db_instance.postgres.address}" >> /opt/src/webapp/.env
               echo "DB_USER=${var.DB_USER}" >> /opt/src/webapp/.env
@@ -41,6 +41,7 @@ resource "aws_launch_template" "app" {
               -c file:/opt/cloudwatch-config.json \
               -s
               EOF
+  )
 
   tag_specifications {
     resource_type = "instance"
