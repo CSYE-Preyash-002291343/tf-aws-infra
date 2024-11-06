@@ -73,8 +73,3 @@ variable "domain" {
   description = "The domain to use for Route53."
   type        = string
 }
-
-variable "ARN-dev" {
-  description = "The ARN for the dev user."
-  type        = string
-}
