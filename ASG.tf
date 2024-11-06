@@ -4,7 +4,7 @@ resource "aws_autoscaling_group" "webapp_asg" {
   min_size             = 3
 
   launch_template {
-    id      = aws_launch_template.web_app.id
+    id      = aws_launch_template.app.id
     version = "$Latest"
   }
 
@@ -21,29 +21,18 @@ resource "aws_autoscaling_group" "webapp_asg" {
 
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "scale_up_policy"
-  scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 60
   autoscaling_group_name = aws_autoscaling_group.webapp_asg.name
-
   metric_aggregation_type = "Average"
-  estimated_instance_warmup = 300
-
-  step_adjustment {
-    metric_interval_lower_bound = 5
-    scaling_adjustment          = 1
-  }
+  scaling_adjustment          = 2
 }
 
 resource "aws_autoscaling_policy" "scale_down" {
   name                   = "scale_down_policy"
-  scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 60
   autoscaling_group_name = aws_autoscaling_group.webapp_asg.name
-
-  step_adjustment {
-    metric_interval_upper_bound = 3
-    scaling_adjustment          = -1
-  }
+  metric_aggregation_type = "Average"
+  scaling_adjustment          = -2
 }
