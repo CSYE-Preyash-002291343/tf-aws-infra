@@ -1,6 +1,6 @@
 resource "aws_launch_template" "app" {
   name_prefix   = "app-template"
-  image_id      = var.ami-ID  
+  image_id      = var.ami-ID
   instance_type = var.instance_type
 
   network_interfaces {
@@ -16,8 +16,8 @@ resource "aws_launch_template" "app" {
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
-      volume_type = "gp2"
-      volume_size = 25
+      volume_type           = "gp2"
+      volume_size           = 25
       delete_on_termination = true
     }
   }
