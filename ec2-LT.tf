@@ -1,7 +1,8 @@
 resource "aws_launch_template" "app" {
-  name_prefix   = "app-template"
+  name          = var.launch_template
   image_id      = var.ami-ID
   instance_type = var.instance_type
+  key_name      = var.key_name
 
   network_interfaces {
     subnet_id                   = aws_subnet.public[0].id

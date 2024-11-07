@@ -73,3 +73,33 @@ variable "domain" {
   description = "The domain to use for Route53."
   type        = string
 }
+
+variable "key_name" {
+  description = "The name of the key pair to use for the EC2 instance."
+  type        = string
+  default    = "SSH-Key Pair"
+}
+
+variable "launch_template" {
+  description = "The name of the launch template."
+  type        = string
+  default     = "csye6225_asg"
+}
+
+variable "ASG" {
+  description = "The name of the Auto Scaling Group."
+  type        = string
+  default     = "webapp_asg"
+}
+
+variable "LB-Port" {
+  description = "The port for the load balancer."
+  type        = number
+  default     = 5000
+}
+
+variable "loadBalancerName" {
+  description = "The name of the load balancer."
+  type        = string
+  default     = "webapp-alb"
+}

@@ -1,4 +1,5 @@
 resource "aws_autoscaling_group" "webapp_asg" {
+  name             = var.ASG
   desired_capacity = 3
   max_size         = 5
   min_size         = 3
@@ -25,7 +26,7 @@ resource "aws_autoscaling_policy" "scale_up" {
   cooldown                = 60
   autoscaling_group_name  = aws_autoscaling_group.webapp_asg.name
   metric_aggregation_type = "Average"
-  scaling_adjustment      = 2
+  scaling_adjustment      = 1
 }
 
 resource "aws_autoscaling_policy" "scale_down" {
@@ -34,5 +35,5 @@ resource "aws_autoscaling_policy" "scale_down" {
   cooldown                = 60
   autoscaling_group_name  = aws_autoscaling_group.webapp_asg.name
   metric_aggregation_type = "Average"
-  scaling_adjustment      = -2
+  scaling_adjustment      = -1
 }

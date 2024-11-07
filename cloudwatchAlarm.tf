@@ -1,4 +1,4 @@
-# CloudWatch Alarm for Scale Up (when CPU Utilization is 5%)
+# CloudWatch Alarm for Scale Up
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   alarm_name          = "cpu_high"
   comparison_operator = "GreaterThanThreshold"
@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   namespace           = "AWS/EC2"
   period              = 60
   statistic           = "Average"
-  threshold           = 6
+  threshold           = 7.75
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.webapp_asg.name
@@ -17,7 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   alarm_actions     = [aws_autoscaling_policy.scale_up.arn]
 }
 
-# CloudWatch Alarm for Scale Down (when CPU Utilization is 5% or below)
+# CloudWatch Alarm for Scale Down
 resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   alarm_name          = "cpu_low"
   comparison_operator = "LessThanThreshold"
@@ -26,7 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   namespace           = "AWS/EC2"
   period              = 60
   statistic           = "Average"
-  threshold           = 5
+  threshold           = 6.5
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.webapp_asg.name

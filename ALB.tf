@@ -1,5 +1,5 @@
 resource "aws_lb" "webapp_alb" {
-  name               = "web-app-alb"
+  name               = var.loadBalancerName
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ALB-SG.id]
@@ -10,7 +10,7 @@ resource "aws_lb" "webapp_alb" {
 
 resource "aws_lb_target_group" "webapp" {
   name     = "webapp-target-group"
-  port     = 5000
+  port     = var.LB-Port
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
 
