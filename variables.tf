@@ -77,7 +77,7 @@ variable "domain" {
 variable "key_name" {
   description = "The name of the key pair to use for the EC2 instance."
   type        = string
-  default    = "SSH-Key Pair"
+  default     = "SSH-Key Pair"
 }
 
 variable "launch_template" {
