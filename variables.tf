@@ -103,3 +103,18 @@ variable "loadBalancerName" {
   type        = string
   default     = "webapp-alb"
 }
+
+variable "SENDGRID_API_KEY" {
+  description = "The SendGrid API key."
+  type        = string
+}
+
+variable "SENDGRID_FROM_EMAIL" {
+  description = "The email address to send emails from."
+  type        = string
+}
+
+variable "APP_BASE_URL" {
+  description = "The base URL for the application."
+  type        = string
+}
