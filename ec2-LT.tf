@@ -30,6 +30,7 @@ resource "aws_launch_template" "app" {
               echo "DB_PASS=${var.DB_PASS}" >> /opt/src/webapp/.env
               echo "DB_NAME=${var.DB_NAME}" >> /opt/src/webapp/.env
               echo "BUCKET=${aws_s3_bucket.my_bucket.bucket}" >> /opt/src/webapp/.env
+              echo "SNS_TOPIC_ARN=${aws_sns_topic.userUpdate.arn}" >> /opt/src/webapp/.env
 
               # Start the app
               sudo systemctl restart packer-webapp.service

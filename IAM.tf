@@ -1,4 +1,4 @@
-resource "aws_iam_role" "cloudwatch_agent_role" {
+resource "aws_iam_role" "ec2Role" {
   name = "CloudWatchAgentServerRole"
 
 
@@ -21,7 +21,7 @@ resource "aws_iam_role" "cloudwatch_agent_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_policy" {
-  role       = aws_iam_role.cloudwatch_agent_role.name
+  role       = aws_iam_role.ec2Role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
@@ -56,11 +56,84 @@ resource "aws_iam_policy" "s3_access_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3_access_policy_attachment" {
-  role       = aws_iam_role.cloudwatch_agent_role.name
+  role       = aws_iam_role.ec2Role.name
   policy_arn = aws_iam_policy.s3_access_policy.arn
+}
+
+resource "aws_iam_policy" "sns_publish_policy" {
+  name = "SNSPublishPolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "sns:Publish",
+        Resource = aws_sns_topic.userUpdate.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "sns_publish_policy_attachment" {
+  role       = aws_iam_role.ec2Role.name
+  policy_arn = aws_iam_policy.sns_publish_policy.arn
 }
 
 resource "aws_iam_instance_profile" "cloudwatch_agent_profile" {
   name = "CloudWatchAgentInstanceProfile"
-  role = aws_iam_role.cloudwatch_agent_role.name
+  role = aws_iam_role.ec2Role.name
+}
+
+resource "aws_iam_role" "lambda_exec_role" {
+  name = "LambdaExecutionRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Purpose = "Role for Lambda function execution"
+  }
+}
+
+resource "aws_iam_policy" "lambda_policy" {
+  name = "LambdaExecutionPolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Action = [
+          "rds:*",
+          "sns:Publish"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy_attach" {
+  role       = aws_iam_role.lambda_exec_role.name
+  policy_arn = aws_iam_policy.lambda_policy.arn
 }
