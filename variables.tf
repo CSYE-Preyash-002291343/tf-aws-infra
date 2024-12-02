@@ -143,3 +143,8 @@ variable "demo_certificate_arn" {
   description = "The ARN of the demo SSL certificate."
   type        = string
 }
+
+variable "dev_certificate_arn" {
+  description = "The ARN of the development SSL certificate."
+  type        = string
+}
