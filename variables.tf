@@ -118,3 +118,33 @@ variable "APP_BASE_URL" {
   description = "The base URL for the application."
   type        = string
 }
+
+variable "account_id" {
+  description = "The AWS account ID."
+  type        = string
+}
+
+variable "DevZoneID" {
+  description = "The Hosted Zone ID for the development environment."
+  type        = string
+}
+
+variable "emailCreds" {
+  description = "The name of the email credentials secret."
+  type        = string
+}
+
+variable "rdsCreds" {
+  description = "The name of the RDS credentials secret."
+  type        = string
+}
+
+variable "demo_certificate_arn" {
+  description = "The ARN of the demo SSL certificate."
+  type        = string
+}
+
+variable "dev_certificate_arn" {
+  description = "The ARN of the development SSL certificate."
+  type        = string
+}

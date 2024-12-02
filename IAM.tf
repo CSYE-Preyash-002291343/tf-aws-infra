@@ -80,7 +80,59 @@ resource "aws_iam_role_policy_attachment" "sns_publish_policy_attachment" {
   policy_arn = aws_iam_policy.sns_publish_policy.arn
 }
 
-resource "aws_iam_instance_profile" "cloudwatch_agent_profile" {
+resource "aws_iam_policy" "secrets_manager_policy" {
+  name = "secrets_manager_access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "secretsmanager:GetSecretValue",
+        Resource = aws_secretsmanager_secret_version.random_password.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_secrets_manager_policy" {
+  role       = aws_iam_role.ec2Role.name
+  policy_arn = aws_iam_policy.secrets_manager_policy.arn
+}
+
+resource "aws_iam_policy" "ec2_kms_policy" {
+  name        = "ec2-kms-access"
+  description = "Allow EC2 instances to access the KMS key for encryption and decryption operations."
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid    = "AllowKMSKeyManagement",
+        Effect = "Allow",
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:GenerateDataKeyWithoutPlaintext",
+          "kms:DescribeKey",
+          "kms:CreateGrant",
+          "kms:ListGrants",
+          "kms:RevokeGrant"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_kms_policy" {
+  role       = aws_iam_role.ec2Role.name
+  policy_arn = aws_iam_policy.ec2_kms_policy.arn
+}
+
+resource "aws_iam_instance_profile" "agent_profile" {
   name = "CloudWatchAgentInstanceProfile"
   role = aws_iam_role.ec2Role.name
 }
@@ -128,6 +180,35 @@ resource "aws_iam_policy" "lambda_policy" {
         ]
         Effect   = "Allow"
         Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_secrets_policy" {
+  name = "LambdaSecretsPolicy"
+  role = aws_iam_role.lambda_exec_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = [
+          aws_secretsmanager_secret.emailCreds.arn
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt"
+        ]
+        Resource = [
+          aws_kms_key.secrets_key.arn
+        ]
       }
     ]
   })

@@ -25,10 +25,12 @@ resource "aws_lb_target_group" "webapp" {
   }
 }
 
-resource "aws_lb_listener" "http_listener" {
+resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.webapp_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.environment == "dev" ? var.dev_certificate_arn : var.demo_certificate_arn
 
   default_action {
     type             = "forward"

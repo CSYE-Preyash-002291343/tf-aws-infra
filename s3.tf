@@ -37,7 +37,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      kms_master_key_id = "alias/s3-key"
+      sse_algorithm     = "aws:kms"
     }
   }
 }
